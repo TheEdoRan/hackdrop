@@ -69,6 +69,10 @@ body {
 
 /* Scrollable list — visible thumb, no track background */
 .scroll-area {
+	scrollbar-color: transparent transparent;
+}
+.scroll-area:hover,
+.scroll-area:focus-within {
 	scrollbar-color: var(--color-ink-3) transparent;
 }
 .scroll-area::-webkit-scrollbar {
@@ -82,7 +86,8 @@ body {
 	border-radius: 9999px;
 }
 @media (prefers-color-scheme: dark) {
-	.scroll-area {
+	.scroll-area:hover,
+	.scroll-area:focus-within {
 		scrollbar-color: var(--color-ink-3-dk) transparent;
 	}
 	.scroll-area::-webkit-scrollbar-thumb {
