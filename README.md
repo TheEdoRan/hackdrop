@@ -5,7 +5,7 @@
 <h1 align="center">Hackdrop</h1>
 
 <p align="center">
-	A new-tab browser extension that drops <strong>GitHub Trending</strong> and <strong>Hacker News</strong> into every new tab — side by side, theme-aware, zero configuration.
+	A new-tab browser extension that drops <strong>GitHub Trending</strong> and <strong>Hacker News</strong> into every new tab. Side by side, theme-aware, zero configuration.
 </p>
 
 <p align="center">
@@ -14,25 +14,25 @@
 
 ## Install
 
-- **Chrome / Edge / Brave / Arc:** [Chrome Web Store](https://chromewebstore.google.com/) — *coming soon*
-- **Firefox:** [Firefox Add-ons](https://addons.mozilla.org/) — *coming soon*
+- **Chrome / Edge / Brave / Arc:** [Chrome Web Store](https://chromewebstore.google.com/) (*coming soon*)
+- **Firefox:** [Firefox Add-ons](https://addons.mozilla.org/) (*coming soon*)
 
-Want to try it first? The same new-tab page is live at **[hackdrop.theedoran.xyz](https://hackdrop.theedoran.xyz)** — no install required.
+Want to try it first? The same new-tab page is live at **[hackdrop.theedoran.xyz](https://hackdrop.theedoran.xyz)**, no install required.
 
 Until the listings are live, you can also [build from source](#build-from-source) and sideload.
 
 ## What you get
 
-- **Two clean columns** — GitHub Trending on the left, Hacker News on the right.
-- **Daily / weekly / monthly** trending — your last choice is remembered.
-- **Auto theme** — follows your browser's `prefers-color-scheme`. No toggle, no flash on load.
-- **Cross-browser** — Chromium and Firefox from a single MV3 build.
-- **Fast** — cached results render instantly, then refresh in the background.
-- **Quiet** — no accounts, no settings page, no notifications.
+- **Two clean columns.** GitHub Trending on the left, Hacker News on the right.
+- **Daily / weekly / monthly** trending. Your last choice is remembered.
+- **Auto theme.** Follows your browser's `prefers-color-scheme`. No toggle, no flash on load.
+- **Cross-browser.** Chromium and Firefox from a single MV3 build.
+- **Fast.** Cached results render instantly, then refresh in the background.
+- **Quiet.** No accounts, no settings page, no notifications.
 
 ## Privacy
 
-Hackdrop has no analytics, no accounts, and no third-party trackers. The extension talks to a single host — `hackdrop-api.theedoran.xyz` — which proxies GitHub Trending and Hacker News so your browser never contacts those services directly. Your filter choice and a short-lived cache of the public trending lists are stored locally in `browser.storage.local`.
+Hackdrop has no analytics, no accounts, and no third-party trackers. The extension talks to a single host, `hackdrop-api.theedoran.xyz`, which proxies GitHub Trending and Hacker News so your browser never contacts those services directly. Your filter choice and a short-lived cache of the public trending lists are stored locally in `browser.storage.local`.
 
 Full details: [`docs/PRIVACY.md`](./docs/PRIVACY.md).
 
@@ -65,7 +65,7 @@ The extension calls a small Hono server at `https://hackdrop-api.theedoran.xyz` 
 
 ## Credits
 
-Hackdrop is heavily inspired by the wonderful [Devo](https://github.com/karakanb/devo) extension — all credit to its author for the original idea and design language. Hackdrop is a from-scratch reimplementation with a different content mix and a server-side scraper for trending data.
+Hackdrop is heavily inspired by the wonderful [Devo](https://github.com/karakanb/devo) extension; all credit to its author for the original idea and design language. Hackdrop is a from-scratch reimplementation with a different content mix and a server-side scraper for trending data.
 
 ## License
 
