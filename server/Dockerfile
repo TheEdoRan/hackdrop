@@ -2,7 +2,8 @@
 #
 # Build context: repository root (so the workspace lockfile is in scope).
 
-# node:24-alpine — pinned by digest to neutralize tag drift. Bump via Dependabot.
+# node:24-alpine — pinned by digest to neutralize tag drift.
+# Refresh manually: `docker pull node:24-alpine && docker inspect --format='{{index .RepoDigests 0}}' node:24-alpine`
 FROM node:24-alpine@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f AS base
 RUN npm i -g pnpm@10
 WORKDIR /app
