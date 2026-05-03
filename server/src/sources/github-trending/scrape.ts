@@ -3,7 +3,7 @@ import * as cheerio from "cheerio";
 import { pino } from "pino";
 import type { ScrapeTarget, TrendingRepo } from "./types.ts";
 
-const logger = pino({ name: "scrape" });
+const logger = pino({ name: "github-trending:scrape" });
 
 const USER_AGENT = "Hackdrop/0.1 (+https://github.com/theedoran/hackdrop)";
 const REQUEST_TIMEOUT_MS = 10_000;

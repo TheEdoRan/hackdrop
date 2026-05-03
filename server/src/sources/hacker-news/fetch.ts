@@ -1,7 +1,7 @@
 import { pino } from "pino";
 import type { HnStory } from "./types.ts";
 
-const logger = pino({ name: "hackernews" });
+const logger = pino({ name: "hacker-news:fetch" });
 
 const API = "https://hacker-news.firebaseio.com/v0";
 const STORY_COUNT = 30;

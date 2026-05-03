@@ -1,8 +1,7 @@
 import { serve } from "@hono/node-server";
 import { pino } from "pino";
-import { startScheduler } from "./cache.ts";
-import { createApp } from "./index.ts";
-import { scrapeTrending } from "./scrape.ts";
+import { createApp } from "./app.ts";
+import { scrapeTrending, startScheduler } from "./sources/github-trending/index.ts";
 
 const logger = pino({
 	name: "server",

@@ -2,7 +2,7 @@ import { pino } from "pino";
 import { ParserDriftError } from "./scrape.ts";
 import type { CacheEntry, ScrapeFn, ScrapeTarget } from "./types.ts";
 
-const logger = pino({ name: "cache" });
+const logger = pino({ name: "github-trending:cache" });
 
 const REFRESH_MS = 60 * 60 * 1000;
 const TARGETS: ScrapeTarget[] = [{ since: "daily" }, { since: "weekly" }, { since: "monthly" }];

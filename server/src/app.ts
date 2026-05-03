@@ -4,10 +4,10 @@ import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
 import { timeout } from "hono/timeout";
 import { pino } from "pino";
-import { getCached, snapshot } from "./cache.ts";
-import { getHackerNews, snapshotHn } from "./hnCache.ts";
 import { rateLimit } from "./rateLimit.ts";
-import type { Since } from "./types.ts";
+import { getCached, snapshot } from "./sources/github-trending/index.ts";
+import type { Since } from "./sources/github-trending/index.ts";
+import { getHackerNews, snapshotHn } from "./sources/hacker-news/index.ts";
 
 const PARSER_VERSION = 1;
 const HANDLER_TIMEOUT_MS = 15_000;
@@ -73,10 +73,12 @@ export function createApp(): Hono {
 			c.header("Cache-Control", "no-store");
 			return c.json({
 				ok: true,
-				lastScrapeAt: snap.lastScrapeAt ? new Date(snap.lastScrapeAt).toISOString() : null,
-				lastScrapeStatus: snap.lastScrapeStatus,
-				cacheKeys: snap.cacheKeys,
 				parserVersion: PARSER_VERSION,
+				githubTrending: {
+					lastScrapeAt: snap.lastScrapeAt ? new Date(snap.lastScrapeAt).toISOString() : null,
+					lastScrapeStatus: snap.lastScrapeStatus,
+					cacheKeys: snap.cacheKeys,
+				},
 				hackerNews: {
 					lastFetchAt: hn.lastFetchAt ? new Date(hn.lastFetchAt).toISOString() : null,
 					lastFetchStatus: hn.lastFetchStatus,
@@ -93,12 +95,6 @@ export function createApp(): Hono {
 		if (!VALID_SINCE.has(sinceParam as Since)) {
 			c.header("Cache-Control", "no-store");
 			return c.json({ error: "invalid_since", message: "since must be one of: daily, weekly, monthly." }, 400);
-		}
-		// Filtering by language is intentionally unsupported — reject any caller
-		// that passes one rather than silently ignoring it.
-		if (c.req.query("language")) {
-			c.header("Cache-Control", "no-store");
-			return c.json({ error: "language_not_supported", message: "Filtering by language is not supported." }, 400);
 		}
 
 		const since = sinceParam as Since;

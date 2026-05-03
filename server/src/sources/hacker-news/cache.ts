@@ -1,8 +1,8 @@
 import { pino } from "pino";
-import { fetchHackerNews, HnFetchError } from "./hackernews.ts";
+import { fetchHackerNews, HnFetchError } from "./fetch.ts";
 import type { HnCacheEntry } from "./types.ts";
 
-const logger = pino({ name: "hn-cache" });
+const logger = pino({ name: "hacker-news:cache" });
 
 const TTL_MS = 5 * 60 * 1000;
 
