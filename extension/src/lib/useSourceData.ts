@@ -40,8 +40,9 @@ export function useSourceData<TItem>(source: Source<TItem>): SourceDataState<TIt
 				}
 			} catch (err) {
 				if (ctrl.signal.aborted) return;
-				const message = err instanceof Error ? err.message : "Unknown error";
-				setError(message);
+				const detail = err instanceof Error ? err.message : String(err);
+				console.warn(`[hackdrop:${source.id}] fetch failed:`, detail);
+				setError("Try again later.");
 			} finally {
 				if (!ctrl.signal.aborted) {
 					setIsInitialLoad(false);
