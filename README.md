@@ -17,7 +17,9 @@
 - **Chrome / Edge / Brave / Arc:** [Chrome Web Store](https://chromewebstore.google.com/) — *coming soon*
 - **Firefox:** [Firefox Add-ons](https://addons.mozilla.org/) — *coming soon*
 
-Until the listings are live, you can [build from source](#build-from-source) and sideload.
+Want to try it first? The same new-tab page is live at **[hackdrop.theedoran.xyz](https://hackdrop.theedoran.xyz)** — no install required.
+
+Until the listings are live, you can also [build from source](#build-from-source) and sideload.
 
 ## What you get
 
