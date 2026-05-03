@@ -10,8 +10,7 @@ extension/web-ext-artifacts/
 
 # env
 .env
-.env.local
-.env.*.local
+.env.*
 
 # logs
 *.log

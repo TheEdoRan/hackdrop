@@ -6,6 +6,7 @@ services:
     image: hackdrop-server
     container_name: hackdrop-server
     restart: unless-stopped
+    init: true
     networks:
       - proxy
 
