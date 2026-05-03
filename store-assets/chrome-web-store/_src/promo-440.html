@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+	* { box-sizing: border-box; margin: 0; padding: 0; }
+	html, body { width: 440px; height: 280px; }
+	body {
+		background: #0a0a0a;
+		color: #f5f5f5;
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+		-webkit-font-smoothing: antialiased;
+		text-rendering: optimizeLegibility;
+		display: flex;
+		align-items: center;
+		padding: 0 36px;
+		gap: 26px;
+		position: relative;
+		overflow: hidden;
+	}
+	.glow {
+		position: absolute;
+		width: 320px;
+		height: 320px;
+		left: -120px;
+		top: -120px;
+		background: radial-gradient(closest-side, rgba(34, 197, 94, 0.18), transparent 70%);
+		pointer-events: none;
+	}
+	.logo {
+		width: 96px;
+		height: 96px;
+		flex-shrink: 0;
+		image-rendering: pixelated;
+		image-rendering: crisp-edges;
+		border-radius: 18px;
+	}
+	.text { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+	.wordmark {
+		font-size: 40px;
+		font-weight: 700;
+		letter-spacing: -0.02em;
+		line-height: 1;
+		color: #f5f5f5;
+	}
+	.tagline {
+		font-size: 14px;
+		line-height: 1.35;
+		color: #a3a3a3;
+		letter-spacing: -0.005em;
+	}
+	.chips { display: flex; gap: 6px; margin-top: 10px; align-items: center; }
+	.chip {
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		padding: 4px 8px;
+		border-radius: 999px;
+	}
+	.chip-gh { background: #f5f5f5; color: #0a0a0a; }
+	.chip-hn { background: #ff6600; color: #0a0a0a; }
+</style>
+</head>
+<body>
+	<div class="glow"></div>
+	<img class="logo" src="logo.png" alt="" />
+	<div class="text">
+		<div class="wordmark">Hackdrop</div>
+		<div class="tagline">GitHub Trending and Hacker News in every new tab.</div>
+		<div class="chips">
+			<span class="chip chip-gh">GitHub</span>
+			<span class="chip chip-hn">Hacker News</span>
+		</div>
+	</div>
+</body>
+</html>
