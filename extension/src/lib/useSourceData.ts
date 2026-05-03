@@ -30,9 +30,11 @@ export function useSourceData<TItem>(source: Source<TItem>): SourceDataState<TIt
 			try {
 				const fresh = await source.fetch(ctrl.signal);
 				if (ctrl.signal.aborted) return;
-				setItems(fresh);
-				setError(null);
-				await writeCache(source.cache.key, fresh);
+				if (fresh.length > 0) {
+					setItems(fresh);
+					setError(null);
+					await writeCache(source.cache.key, fresh);
+				}
 			} catch (err) {
 				if (ctrl.signal.aborted) return;
 				const message = err instanceof Error ? err.message : "Unknown error";

@@ -9,7 +9,7 @@ export const hackerNews: Source<HnStory> = {
 	name: "Hacker News",
 	externalUrl: "https://news.ycombinator.com/",
 	brand: "hn",
-	cache: { key: "hacker-news", ttlMs: 5 * 60 * 1000 },
+	cache: { key: "hacker-news", ttlMs: 60 * 1000 },
 	fetch: fetchHackerNews,
 	Item: HackerNewsItem,
 	Icon: HackerNewsIcon,

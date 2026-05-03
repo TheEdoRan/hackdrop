@@ -34,9 +34,15 @@ export function ColumnCard<TItem>({
 			)}
 
 			<div class="scroll-area min-h-0 flex-1 overflow-y-auto">
-				{error && !items && <ErrorState message={error} />}
+				{error && (!items || items.length === 0) && <ErrorState message={error} />}
 
 				{!error && isInitialLoad && <ItemSkeletonList />}
+
+				{!error && !isInitialLoad && (items === null || items.length === 0) && (
+					<div class="text-ink-3 dark:text-ink-3-dk px-4 py-6 text-sm">
+						Nothing to show right now. Try again in a moment.
+					</div>
+				)}
 
 				{items && items.length > 0 && (
 					<ul class="stagger divide-rule dark:divide-rule-dk divide-y">
