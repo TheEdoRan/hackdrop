@@ -9,10 +9,7 @@
 </p>
 
 <p align="center">
-	<picture>
-		<source media="(prefers-color-scheme: dark)" srcset="./assets/hackdrop-dark.png">
-		<img src="./assets/hackdrop-light.png" alt="Hackdrop new-tab page showing GitHub Trending and Hacker News side by side" width="100%">
-	</picture>
+	<img src="./assets/hackdrop-loop.gif" alt="Hackdrop new-tab page showing GitHub Trending and Hacker News side by side, alternating between light and dark themes" width="100%">
 </p>
 
 ## Install
