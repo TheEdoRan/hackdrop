@@ -5,18 +5,14 @@ import type { CacheEntry, ScrapeFn, ScrapeTarget } from "./types.ts";
 const logger = pino({ name: "cache" });
 
 const REFRESH_MS = 30 * 60 * 1000;
-const TARGETS: ScrapeTarget[] = [
-	{ since: "daily", language: "" },
-	{ since: "weekly", language: "" },
-	{ since: "monthly", language: "" },
-];
+const TARGETS: ScrapeTarget[] = [{ since: "daily" }, { since: "weekly" }, { since: "monthly" }];
 
 const store = new Map<string, CacheEntry>();
 let lastScrapeAt: number | null = null;
 let lastScrapeStatus: "ok" | "failed" | "pending" = "pending";
 
 export function keyOf(target: ScrapeTarget): string {
-	return `${target.since}:${target.language}`;
+	return target.since;
 }
 
 export function getCached(target: ScrapeTarget): CacheEntry | undefined {

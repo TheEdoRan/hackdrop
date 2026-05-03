@@ -14,7 +14,6 @@ export type Since = "daily" | "weekly" | "monthly";
 
 export type ScrapeTarget = {
 	since: Since;
-	language: string;
 };
 
 export type CacheEntry = {
