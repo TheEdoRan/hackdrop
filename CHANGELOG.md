@@ -14,8 +14,6 @@ Categories used: **Added** (new features), **Changed** (changes to existing beha
 
 ### Fixed
 
-- Hid Firefox scrollbars on extension load to match Chromium's behavior. Scrollbars now appear only when the column is hovered or focused, instead of being visible on startup.
-
 ## [0.1.0] - 2026-05-03
 
 ### Added
