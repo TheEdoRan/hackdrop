@@ -1,10 +1,16 @@
 import { formatCompact, formatGrouped } from "../../lib/formatNumber";
+import { safeUrl } from "../../lib/safeUrl";
 import type { TrendingRepo } from "./types";
 
+// Mirrors the server-side regex; defense in depth in case a future server
+// regression lets through anything that isn't a hex / rgb() colour.
+const COLOR_RE = /^(?:#[0-9a-fA-F]{3,8}|rgba?\([0-9., %/\s]+\))$/;
+
 export function GitHubTrendingItem({ item }: { item: TrendingRepo }) {
+	const safeColor = item.languageColor && COLOR_RE.test(item.languageColor) ? item.languageColor : "transparent";
 	return (
 		<a
-			href={item.url}
+			href={safeUrl(item.url)}
 			target="_blank"
 			rel="noopener noreferrer"
 			class="group hover:bg-hover dark:hover:bg-hover-dk relative block px-4 py-3 transition-colors motion-reduce:transition-none"
@@ -26,7 +32,7 @@ export function GitHubTrendingItem({ item }: { item: TrendingRepo }) {
 					<span class="inline-flex items-center gap-1.5">
 						<span
 							class="ring-rule dark:ring-rule-dk size-2 rounded-full ring-1"
-							style={{ backgroundColor: item.languageColor ?? "transparent" }}
+							style={{ backgroundColor: safeColor }}
 							aria-hidden="true"
 						/>
 						{item.language}

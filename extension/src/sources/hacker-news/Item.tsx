@@ -1,12 +1,13 @@
 import { formatGrouped } from "../../lib/formatNumber";
 import { relativeTime } from "../../lib/relativeTime";
+import { safeUrl } from "../../lib/safeUrl";
 import type { HnStory } from "./types";
 
 export function HackerNewsItem({ item }: { item: HnStory }) {
 	return (
 		<div class="group hover:bg-hover dark:hover:bg-hover-dk relative px-4 py-3 transition-colors motion-reduce:transition-none">
 			<a
-				href={item.hnUrl}
+				href={safeUrl(item.hnUrl)}
 				target="_blank"
 				rel="noopener noreferrer"
 				class="absolute inset-0"
@@ -17,7 +18,7 @@ export function HackerNewsItem({ item }: { item: HnStory }) {
 				<span class="text-ink group-hover:text-brand-hn dark:text-ink-dk text-[14px] leading-snug">{item.title}</span>
 				{item.domain && (
 					<a
-						href={item.url}
+						href={safeUrl(item.url)}
 						target="_blank"
 						rel="noopener noreferrer"
 						class="num text-ink-3 dark:text-ink-3-dk hover:text-brand-hn pointer-events-auto relative shrink-0 text-[11px]"

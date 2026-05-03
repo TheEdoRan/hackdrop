@@ -15,6 +15,9 @@
 	},
 	"permissions": ["storage"],
 	"host_permissions": ["https://hacker-news.firebaseio.com/*", "https://hackdrop-api.theedoran.xyz/*"],
+	"content_security_policy": {
+		"extension_pages": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://hackdrop-api.theedoran.xyz https://hacker-news.firebaseio.com; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; object-src 'none'"
+	},
 	"browser_specific_settings": {
 		"gecko": {
 			"id": "hackdrop@theedoran.xyz",
