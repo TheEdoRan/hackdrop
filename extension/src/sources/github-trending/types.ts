@@ -1,0 +1,11 @@
+export type TrendingRepo = {
+	owner: string;
+	name: string;
+	url: string;
+	description: string | null;
+	language: string | null;
+	languageColor: string | null;
+	stars: number;
+	forks: number;
+	starsToday: number;
+};

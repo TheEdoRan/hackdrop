@@ -1,0 +1,22 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/extension"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "production"
+    groups:
+      extension-weekly-bumps:
+        update-types: ["minor", "patch"]
+  - package-ecosystem: "npm"
+    directory: "/server"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "production"
+    groups:
+      server-weekly-bumps:
+        update-types: ["minor", "patch"]
