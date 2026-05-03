@@ -1,0 +1,21 @@
+# Build context = repo root. Keep the image small.
+
+**/node_modules
+**/dist
+**/.cache
+**/.vite
+**/web-ext-artifacts
+
+# Local-only files
+.env
+.env.*
+*.log
+.git
+.github
+.vscode
+.idea
+.DS_Store
+
+# Docs / lockfiles aren't needed in build (lockfile is COPY'd explicitly)
+README.md
+docs/

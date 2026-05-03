@@ -1,0 +1,104 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "tag to build (must already exist, e.g. v0.2.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build:
+    name: build extension zip
+    runs-on: ubuntu-latest
+    steps:
+      - name: resolve ref
+        id: ref
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_TAG: ${{ inputs.tag }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            ref="$INPUT_TAG"
+          else
+            ref="$REF_NAME"
+          fi
+          if ! printf '%s' "$ref" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "ref '$ref' is not a v-prefixed semver tag" >&2
+            exit 1
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.ref.outputs.ref }}
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: install
+        run: pnpm install --frozen-lockfile
+
+      - name: verify tag matches manifest version
+        env:
+          REF: ${{ steps.ref.outputs.ref }}
+        run: |
+          tag="${REF#v}"
+          manifest=$(node -p "require('./extension/public/manifest.json').version")
+          if [ "$tag" != "$manifest" ]; then
+            echo "tag $REF does not match manifest.version $manifest" >&2
+            exit 1
+          fi
+
+      - name: package extension
+        run: pnpm --filter @hackdrop/extension package
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hackdrop-${{ steps.ref.outputs.ref }}
+          path: extension/web-ext-artifacts/*.zip
+          if-no-files-found: error
+
+      - name: extract changelog section
+        env:
+          REF: ${{ steps.ref.outputs.ref }}
+        run: |
+          version="${REF#v}"
+          awk -v ver="$version" '
+            $0 ~ "^## \\[" ver "\\]" { found=1; next }
+            found && /^## \[/ { found=0 }
+            found { print }
+          ' CHANGELOG.md > release_notes.md
+          if [ ! -s release_notes.md ]; then
+            echo "no CHANGELOG.md section found for [$version]" >&2
+            exit 1
+          fi
+          echo "--- release_notes.md ---"
+          cat release_notes.md
+
+      - name: create github release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.ref.outputs.ref }}
+          files: extension/web-ext-artifacts/*.zip
+          body_path: release_notes.md
+          fail_on_unmatched_files: true

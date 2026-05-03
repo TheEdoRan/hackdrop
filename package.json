@@ -1,0 +1,26 @@
+{
+	"name": "hackdrop",
+	"version": "0.1.0",
+	"description": "A modernized new-tab extension showing GitHub Trending and Hacker News, with auto theme.",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "pnpm -r --parallel --stream dev",
+		"build": "pnpm -r build",
+		"lint": "oxlint",
+		"lint:fix": "oxlint --fix",
+		"fmt": "oxfmt --check",
+		"fmt:fix": "oxfmt",
+		"release": "node scripts/release.mjs"
+	},
+	"devDependencies": {
+		"oxfmt": "^0.45.0",
+		"oxlint": "^1.62.0",
+		"oxlint-tsgolint": "^0.21.1",
+		"typescript": "^5.7.2"
+	},
+	"packageManager": "pnpm@10.33.2",
+	"engines": {
+		"node": ">=24"
+	}
+}

@@ -1,0 +1,31 @@
+node_modules/
+dist/
+.cache/
+.vite/
+
+# build outputs
+extension/dist/
+server/dist/
+extension/web-ext-artifacts/
+
+# env
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+
+# tooling scratch
+.playwright-mcp/
