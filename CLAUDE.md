@@ -61,7 +61,7 @@ Pick the SemVer bump deliberately: **patch** for bug fixes only, **minor** for n
 The deployed API at `https://hackdrop-api.theedoran.xyz` is hardcoded in two places:
 
 - `extension/src/sources/github-trending/fetch.ts` — the `fetch()` target.
-- `extension/public/manifest.json` — `host_permissions` (MV3 requires the host to be declared explicitly).
+- `extension/public/manifest.json` — `content_security_policy.connect-src` (the extension page CSP must allow the host; CORS handles the cross-origin grant, so no `host_permissions` is declared).
 
 To point at a different server (e.g. a local one for testing), change both and rebuild + reload the extension. There is no `.env`, no `import.meta.env.VITE_*`, and no build-time injection step.
 
@@ -114,7 +114,7 @@ Two sources today:
 
 ### MV3 manifest
 
-`extension/public/manifest.json` is the single source of truth (Vite copies `public/` into `dist/` verbatim). It targets both Chromium and Firefox via `browser_specific_settings.gecko`. `host_permissions` declares only the deployed API host (`hackdrop-api.theedoran.xyz`); both sources are proxied through the Hono server.
+`extension/public/manifest.json` is the single source of truth (Vite copies `public/` into `dist/` verbatim). It targets both Chromium and Firefox via `browser_specific_settings.gecko`. The manifest declares no `host_permissions` — the new-tab page reaches the API via a normal cross-origin `fetch()` (the server returns wide-open CORS), and `content_security_policy.connect-src` whitelists the deployed API host (`hackdrop-api.theedoran.xyz`). Both sources are proxied through the Hono server.
 
 Vite is configured (`vite.config.ts`) with `root = src/`, single rollup input `src/index.html` (the new-tab page). Tailwind v4 is wired via `@tailwindcss/vite` — there is no PostCSS config and no `tailwind.config.{js,ts}`; tokens and theme are defined in `src/styles/app.css`.
 

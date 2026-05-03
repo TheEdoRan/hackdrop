@@ -10,7 +10,7 @@ For deploying the Hono API the extension talks to, see [`server/DEPLOYMENT.md`](
 - A working clone of the repo with deps installed: `pnpm install` from the repo root.
 - The API URL the extension calls is hardcoded in two places:
   - `extension/src/sources/github-trending/fetch.ts`
-  - `extension/public/manifest.json` (`host_permissions` + `content_security_policy`)
+  - `extension/public/manifest.json` (`content_security_policy.connect-src`)
   - To target a different backend, change both and rebuild.
 
 ## 1. Build artifacts
@@ -96,8 +96,8 @@ The Chrome Web Store also serves Edge (via the Microsoft Edge Add-ons store, sep
      - Full description (Markdown not supported — plain text with line breaks).
      - Category — `Productivity` is the natural fit.
      - Language(s).
-   - **Privacy policy URL**: required because the extension declares `host_permissions`. Hackdrop's policy lives at `docs/PRIVACY.md`; publish it on a stable HTTPS URL (GitHub raw URLs work but a real page is preferable).
-   - **Justifications** for every permission and host permission. Hackdrop's are spelled out in `docs/PRIVACY.md` under "Permissions justification" — paste those into the Chrome Web Store form verbatim. The store rejects vague answers like "needed for the extension to work."
+   - **Privacy policy URL**: recommended in all cases and required by some store fields. Hackdrop's policy lives at `docs/PRIVACY.md`; publish it on a stable HTTPS URL (GitHub raw URLs work but a real page is preferable).
+   - **Justifications** for every declared permission. Hackdrop only declares `storage` (and `chrome_url_overrides.newtab` if asked separately) — no host permissions. The justifications are spelled out in `docs/PRIVACY.md` under "Permissions justification" — paste those into the Chrome Web Store form verbatim. The store rejects vague answers like "needed for the extension to work."
 
 ### 3.2. Submission flow
 
@@ -105,7 +105,7 @@ The Chrome Web Store also serves Edge (via the Microsoft Edge Add-ons store, sep
 2. Fill in the **Store listing** tab: description, screenshots, category, language.
 3. Fill in the **Privacy practices** tab:
    - Single purpose: "Replaces the new-tab page with a feed of GitHub Trending and Hacker News."
-   - Permission justifications (one per item — `storage`, each `host_permissions` host).
+   - Permission justifications (one per item — only `storage` is declared; no host permissions).
    - Tick "I do not collect or use user data" (true for Hackdrop) and accept the developer program policies.
    - Provide the privacy policy URL.
 4. Choose **Distribution**:
@@ -160,17 +160,17 @@ Firefox is the only mainstream browser that **requires** signing for distributio
 
 ## 5. Privacy policy and permissions
 
-Both stores require a privacy policy URL because Hackdrop declares `host_permissions`. The canonical policy is `docs/PRIVACY.md` in this repo. Either:
+Hackdrop declares only the `storage` permission and no host permissions, so a privacy policy URL is not strictly mandated by either store on permissions grounds — but both stores still expect one and surface it in the listing, and reviewers like seeing it. Publish `docs/PRIVACY.md` either:
 
-- Publish it at a stable URL on a domain you control, or
-- Link directly to the rendered file on GitHub.
+- At a stable URL on a domain you control, or
+- Linked directly to the rendered file on GitHub.
 
 The same file also contains permission justifications — paste them into the Chrome / AMO submission forms verbatim so the listing matches the policy.
 
 ## 6. Common rejection reasons
 
 - **Vague permission justifications.** Reviewers want one specific sentence per permission ("`storage` is used to cache the trending list locally so the new tab opens instantly"), not "needed for core functionality."
-- **Missing privacy policy URL** when any host permission is declared.
+- **Missing privacy policy URL.** Not currently required for Hackdrop's permission set, but expected by reviewers when any data — even a public cache — is stored locally; just provide it.
 - **Listing screenshots that don't reflect the actual extension UI** (e.g. mocked-up images). Use real captures.
 - **Source code mismatch on AMO.** The submitted source must build the exact `.zip` you uploaded with the documented commands. CI-built artifacts attached to GitHub Releases are easiest because the commit is pinned and reproducible.
 - **CSP issues.** Hackdrop's `content_security_policy` in `manifest.json` is intentionally tight (`script-src 'self'`, no `unsafe-eval`, etc.). Don't loosen it for convenience — both stores flag broad CSPs.

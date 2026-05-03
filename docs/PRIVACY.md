@@ -1,6 +1,6 @@
 # Hackdrop Privacy Policy
 
-_Last updated: 2026-05-03_
+_Last updated: 2026-05-04_
 
 Hackdrop is a browser extension that replaces the new-tab page with a feed of GitHub Trending repositories and Hacker News stories. This page describes everything Hackdrop does that touches your data.
 
@@ -37,8 +37,9 @@ This data is identical to what is publicly visible on `github.com/trending` and 
 | Permission | Why it's needed |
 |---|---|
 | `storage` | Cache the trending lists locally so new tabs open instantly without re-fetching every time. |
-| `host_permissions` for `https://hackdrop-api.theedoran.xyz/*` | Fetch the cached GitHub Trending list and Hacker News top stories from the developer's caching backend. |
 | `chrome_url_overrides.newtab` | Render Hackdrop as the new-tab page. |
+
+Hackdrop does not declare any host permissions. The new-tab page reaches `hackdrop-api.theedoran.xyz` via a normal cross-origin `fetch()` allowed by the backend's open CORS policy and the extension's `content_security_policy.connect-src` directive — no elevated host access is granted to the extension.
 
 Hackdrop does not request `tabs`, `activeTab`, `webRequest`, `cookies`, `history`, `bookmarks`, `<all_urls>`, content scripts on arbitrary pages, or any other permission beyond the ones above.
 

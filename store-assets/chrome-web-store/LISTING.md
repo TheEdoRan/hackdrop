@@ -60,13 +60,10 @@ Replaces the new-tab page with a feed of GitHub Trending repositories and Hacker
 
 ### Permission justifications
 
-Paste each into the matching field. The dashboard asks one question per declared permission and one per host.
+Paste each into the matching field. The dashboard asks one question per declared permission. Hackdrop declares no host permissions — the new-tab page reaches the API via a standard cross-origin `fetch()` allowed by the backend's open CORS policy and the extension's `content_security_policy.connect-src` directive, so no host justification is required.
 
 **`storage` permission:**
 Caches the trending lists locally so a new tab opens instantly without re-fetching, and persists the user's daily/weekly/monthly filter choice between sessions. The cache holds only the public trending data the API returns.
-
-**Host permission `https://hackdrop-api.theedoran.xyz/*`:**
-Fetches the GitHub Trending list and Hacker News top stories from the developer-operated caching backend at hackdrop-api.theedoran.xyz. The backend scrapes the public github.com/trending page and queries the official Hacker News API (hacker-news.firebaseio.com) on the server side, then returns the parsed lists. The browser never contacts GitHub or Hacker News directly, which is why this is the only host declared.
 
 **`chrome_url_overrides.newtab` (if asked separately):**
 Renders Hackdrop as the new-tab page. This is the extension's single purpose.

@@ -12,6 +12,8 @@ Categories used: **Added** (new features), **Changed** (changes to existing beha
 
 ### Changed
 
+- Hackdrop no longer requests host access to the API. Installing or updating the extension no longer shows a "can read your data on hackdrop-api.theedoran.xyz" warning. The extension still fetches from the same host using the browser's standard cross-origin policy, so the experience is unchanged.
+
 ### Fixed
 
 ## [0.1.0] - 2026-05-03
