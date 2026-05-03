@@ -51,19 +51,17 @@ export function rateLimit(options: RateLimitOptions): MiddlewareHandler {
 	};
 }
 
-// The canonical Hackdrop deployment runs behind a reverse proxy on a private
-// Docker network, so X-Forwarded-For carries the real client IP and cannot be
-// spoofed by external callers (the proxy strips inbound XFF and rewrites it).
-// If the server is ever exposed directly, fall back to the socket's remote
-// address.
+// Production chain is Cloudflare → Nginx Proxy Manager → this container.
+// Cloudflare appends to inbound X-Forwarded-For rather than stripping it, and
+// NPM's `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for` appends
+// once more — so XFF[0] is whatever the original caller chose. The only
+// client-IP value that's actually trustworthy is CF-Connecting-IP, set by
+// Cloudflare and forwarded through unchanged. If the request bypasses the
+// CF→NPM path (local debug, regression in proxy config), there's no client
+// header we can trust, so fall back to the socket address.
 function clientKey(c: Context): string {
-	const xff = c.req.header("x-forwarded-for");
-	if (xff) {
-		const first = xff.split(",")[0]?.trim();
-		if (first) return first;
-	}
-	const real = c.req.header("x-real-ip")?.trim();
-	if (real) return real;
+	const cf = c.req.header("cf-connecting-ip")?.trim();
+	if (cf) return cf;
 	const info = getConnInfo(c);
 	return info.remote.address ?? "unknown";
 }
