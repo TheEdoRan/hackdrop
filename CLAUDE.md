@@ -67,16 +67,24 @@ To point at a different server (e.g. a local one for testing), change both and r
 
 ## Architecture
 
-### Server: scrape → in-memory cache → HTTP
+### Server: per-source modules → in-memory cache → HTTP
 
-`server/src/server.ts` boots Hono on `:3000`, registers `SIGINT`/`SIGTERM` shutdown, and starts a scheduler.
+`server/src/server.ts` boots Hono on `:3000`, registers `SIGINT`/`SIGTERM` shutdown, and starts the GitHub Trending scheduler.
 
-- `cache.ts` — module-level `Map` cache keyed by `${since}:${language}`. `startScheduler()` runs the scrape immediately on boot and every hour. **On scrape failure (network error or `ParserDriftError`) the previous good cache is kept** and `lastScrapeStatus` flips to `"failed"`; the endpoint keeps serving stale data rather than 5xx-ing.
-- `scrape.ts` — fetches `github.com/trending` with a 10s `AbortController` timeout, parses with cheerio. If fewer than `MIN_VALID_ITEM_COUNT` (5) items come out, it throws `ParserDriftError` so the cache layer knows GitHub's HTML probably changed. **When the scraper breaks, fix the selectors in `scrape.ts` — don't bypass the drift check.**
-- `index.ts` — defines `/health` (no-store, returns scrape status + parser version) and `/v1/github?since=daily|weekly|monthly`. The `/v1/github` response sets `Cache-Control: public, s-maxage=3600, max-age=1800, stale-while-revalidate=1800` (CDN/edge caches for 1h, browser 30m + 30m SWR). Returns `503 cache_warming` only before the boot scrape lands.
+Source code is grouped under `server/src/sources/<id>/`, mirroring the extension's `sources/<id>/` layout. Each folder contains `cache.ts`, a fetcher (`scrape.ts` for HTML or `fetch.ts` for JSON APIs), `types.ts`, and an `index.ts` barrel that re-exports the public surface. Adding a new source means adding a folder under `sources/` and wiring a route in `app.ts`.
+
+- `sources/github-trending/cache.ts` — module-level `Map<since, entry>` cache. `startScheduler()` runs the scrape immediately on boot and every hour. **On scrape failure (network error or `ParserDriftError`) the previous good cache is kept** and `lastScrapeStatus` flips to `"failed"`; the endpoint keeps serving stale data rather than 5xx-ing.
+- `sources/github-trending/scrape.ts` — fetches `github.com/trending` with a 10s `AbortController` timeout, parses with cheerio. If fewer than `MIN_VALID_ITEM_COUNT` (5) items come out, it throws `ParserDriftError` so the cache layer knows GitHub's HTML probably changed. **When the scraper breaks, fix the selectors here — don't bypass the drift check.**
+- `sources/hacker-news/cache.ts` — single-entry cache with a 5-minute TTL and stale-while-revalidate. First request triggers the cold fill; subsequent stale requests return the cached value while a background refresh runs (deduplicated via an in-flight promise). No scheduler — refresh is request-driven.
+- `sources/hacker-news/fetch.ts` — calls the official Y Combinator API at `hacker-news.firebaseio.com`, pulls top story IDs, fans out to 30 item lookups, projects to `HnStory`. Throws `HnFetchError` on transport failures or if fewer than 5 valid items survive filtering.
+- `app.ts` — defines `/health` (returns `{ok: true}` only), `/v1/github?since=daily|weekly|monthly`, and `/v1/hackernews`. v1 responses set long `Cache-Control` (1h CDN / 30m browser + 30m SWR for GH Trending; 5m / 2m + 10m SWR for HN). Returns `503 cache_warming` only before the first successful fetch.
 - CORS is wide open (`origin: "*"`) since this is consumed by browser extensions from arbitrary origins.
 
-`PARSER_VERSION` in `index.ts` is exposed via the `X-Hackdrop-Parser-Version` header and `/health`. Bump it whenever the scrape output shape changes so clients/observers can detect drift.
+`/internal/status` (registered only when `INTERNAL_TOKEN` is set; callers send `X-Internal-Token: <value>`) returns `{ ok, parserVersion, githubTrending: { lastScrapeAt, lastScrapeStatus, cacheKeys }, hackerNews: { lastFetchAt, lastFetchStatus, cached } }`.
+
+`PARSER_VERSION` (defined in `app.ts`) is surfaced as the `parserVersion` field on `/internal/status`. Bump it whenever the GitHub scrape output shape changes so observers can detect drift.
+
+Pino logger names follow `<source-id>:<role>` (e.g. `github-trending:scrape`, `hacker-news:cache`) so a single grep on the source slug surfaces every line for that source regardless of role.
 
 ### Extension: source registry + per-source columns
 

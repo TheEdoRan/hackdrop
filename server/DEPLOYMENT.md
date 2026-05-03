@@ -48,7 +48,7 @@ docker run -d \
 
 None are required. The server reads `PORT` (default `3000`) and `NODE_ENV` (set to `production` in the runtime image). Optionally set `LOG_LEVEL` if you want to filter `pino` output.
 
-Optional: set `INTERNAL_TOKEN` to enable `GET /internal/status`, which returns the detailed cache/scrape state (lastScrapeAt, lastScrapeStatus, cacheKeys, parserVersion, Hacker News status). Callers must send `X-Internal-Token: <value>`. With the variable unset, the endpoint isn't registered at all and `/health` returns just `{ "ok": true }`.
+Optional: set `INTERNAL_TOKEN` to enable `GET /internal/status`, which returns the detailed cache state nested per source (`githubTrending: { lastScrapeAt, lastScrapeStatus, cacheKeys }`, `hackerNews: { lastFetchAt, lastFetchStatus, cached }`, plus a top-level `parserVersion`). Callers must send `X-Internal-Token: <value>`. With the variable unset, the endpoint isn't registered at all. `/health` always returns just `{ "ok": true }` regardless.
 
 ### 1.3. TLS and domain
 
@@ -62,11 +62,21 @@ export YOUR_API=https://your-api-domain
 
 # Health check
 curl -s "$YOUR_API/health" | jq
-# → { "ok": true, "lastScrapeAt": "...", "lastScrapeStatus": "ok", "cacheKeys": ["daily:"], "parserVersion": 1 }
+# → { "ok": true }
+
+# Detailed status (requires INTERNAL_TOKEN to be set)
+curl -s -H "X-Internal-Token: $INTERNAL_TOKEN" "$YOUR_API/internal/status" | jq
+# → { "ok": true, "parserVersion": 1,
+#     "githubTrending": { "lastScrapeAt": "...", "lastScrapeStatus": "ok", "cacheKeys": ["daily","weekly","monthly"] },
+#     "hackerNews":     { "lastFetchAt": "...",  "lastFetchStatus": "ok",  "cached": true } }
 
 # Trending list
 curl -s "$YOUR_API/v1/github?since=daily" | jq 'length'
 # → number of repos (typically 5–25, depending on what GitHub serves)
+
+# Hacker News top stories
+curl -s "$YOUR_API/v1/hackernews" | jq 'length'
+# → number of stories (up to 30)
 ```
 
 Expected behavior:
@@ -97,4 +107,4 @@ Compose rebuilds the image (picking up any `server/src/**` or `server/package.js
 The API is unreachable. Hit `/health` on your deployed API. If that's down, check `docker compose logs server` for errors.
 
 **“Stars today shows 0 for everything.”**
-GitHub may be rendering the trending page in a slightly different way. Check the most recent `parser_drift` line in `docker compose logs server` and update `server/src/scrape.ts` to match the new HTML structure, then rerun `docker compose up -d --build`.
+GitHub may be rendering the trending page in a slightly different way. Check the most recent `parser_drift` line in `docker compose logs server` and update `server/src/sources/github-trending/scrape.ts` to match the new HTML structure, then rerun `docker compose up -d --build`.
