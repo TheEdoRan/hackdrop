@@ -102,11 +102,11 @@ Adding a new column means: create `extension/src/sources/<id>/` with `index.ts` 
 
 Two sources today:
 - `github-trending` calls **the Hono server** (`/v1/github?since=daily`).
-- `hacker-news` calls **the Firebase API directly** (`hacker-news.firebaseio.com/v0`) — no proxy, no scrape. Hence the `host_permissions` entry for `hacker-news.firebaseio.com` in `manifest.json`.
+- `hacker-news` calls **the Hono server** (`/v1/hackernews`); the server fetches the top stories from Y Combinator's official Hacker News API and edge-caches the result. The browser never contacts `hacker-news.firebaseio.com` directly.
 
 ### MV3 manifest
 
-`extension/public/manifest.json` is the single source of truth (Vite copies `public/` into `dist/` verbatim). It targets both Chromium and Firefox via `browser_specific_settings.gecko`. `host_permissions` hardcodes the deployed API host alongside the Hacker News Firebase host.
+`extension/public/manifest.json` is the single source of truth (Vite copies `public/` into `dist/` verbatim). It targets both Chromium and Firefox via `browser_specific_settings.gecko`. `host_permissions` declares only the deployed API host (`hackdrop-api.theedoran.xyz`); both sources are proxied through the Hono server.
 
 Vite is configured (`vite.config.ts`) with `root = src/`, single rollup input `src/index.html` (the new-tab page). Tailwind v4 is wired via `@tailwindcss/vite` — there is no PostCSS config and no `tailwind.config.{js,ts}`; tokens and theme are defined in `src/styles/app.css`.
 

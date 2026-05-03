@@ -23,10 +23,10 @@
 ```
 hackdrop/
 ├── extension/   # Vite + Preact + Tailwind v4 browser extension (MV3, dual-target)
-└── server/      # Hono + Node 24 API that scrapes github.com/trending every 30 min
+└── server/      # Hono + Node 24 API that proxies GitHub Trending (hourly scrape) and Hacker News
 ```
 
-The `server/` is intended to run as a Docker container reachable at a stable URL. The `extension/` calls it for trending data, and talks directly to the official Hacker News Firebase API for stories.
+The `server/` is intended to run as a Docker container reachable at a stable URL. The `extension/` calls it for both GitHub Trending and Hacker News data; the browser doesn't talk to any third-party APIs directly.
 
 ## Quick start
 

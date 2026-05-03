@@ -16,7 +16,7 @@ Hackdrop is a browser extension that replaces the new-tab page with a feed of Gi
 When you open a new tab, Hackdrop makes two kinds of HTTP requests:
 
 1. **GitHub Trending data** — a request to `https://hackdrop-api.theedoran.xyz/v1/github`. This is a small backend service operated by the developer that scrapes the public `github.com/trending` page every hour and returns the parsed list. The request includes only the standard headers your browser attaches automatically (User-Agent, etc.). No identifiers are added by the extension.
-2. **Hacker News stories** — requests to `https://hacker-news.firebaseio.com/v0/`, the official public Hacker News API operated by Y Combinator. The same applies: no identifiers added by the extension.
+2. **Hacker News stories** — a request to `https://hackdrop-api.theedoran.xyz/v1/hackernews`. The same backend service fetches the top stories from Y Combinator's official Hacker News API on the server side and returns the parsed list, so your browser never contacts the Hacker News API directly. The request includes only the standard headers your browser attaches automatically. No identifiers are added by the extension.
 
 Both endpoints are public and read-only. Hackdrop never sends form data, login credentials, page contents, browsing history, or any other personal information.
 
@@ -37,18 +37,16 @@ This data is identical to what is publicly visible on `github.com/trending` and 
 | Permission | Why it's needed |
 |---|---|
 | `storage` | Cache the trending lists locally so new tabs open instantly without re-fetching every time. |
-| `host_permissions` for `https://hacker-news.firebaseio.com/*` | Fetch top Hacker News story IDs and metadata from the official public Hacker News API. |
-| `host_permissions` for `https://hackdrop-api.theedoran.xyz/*` | Fetch the cached GitHub Trending list from the developer's small caching backend. |
+| `host_permissions` for `https://hackdrop-api.theedoran.xyz/*` | Fetch the cached GitHub Trending list and Hacker News top stories from the developer's caching backend. |
 | `chrome_url_overrides.newtab` | Render Hackdrop as the new-tab page. |
 
 Hackdrop does not request `tabs`, `activeTab`, `webRequest`, `cookies`, `history`, `bookmarks`, `<all_urls>`, content scripts on arbitrary pages, or any other permission beyond the ones above.
 
 ## Third parties
 
-The extension communicates with two third-party endpoints, both serving public data:
+The extension communicates with one third-party endpoint:
 
-- **`hacker-news.firebaseio.com`** — operated by Y Combinator. See https://news.ycombinator.com/newsguidelines.html.
-- **`hackdrop-api.theedoran.xyz`** — operated by the developer (Edoardo Ranghieri). The backend is a stateless caching proxy in front of the public GitHub Trending page; it stores no logs that include user-identifying data. Standard ephemeral access logs may exist at the hosting layer (IP and User-Agent for incoming HTTP requests, retained briefly for operational purposes) and are not linked to any user identity.
+- **`hackdrop-api.theedoran.xyz`** — operated by the developer (Edoardo Ranghieri). The backend is a stateless caching proxy that combines GitHub Trending (scraped from the public `github.com/trending` page) and Hacker News top stories (fetched from Y Combinator's official Hacker News API on the server side, not from your browser). It stores no logs that include user-identifying data. Standard ephemeral access logs may exist at the hosting layer (IP and User-Agent for incoming HTTP requests, retained briefly for operational purposes) and are not linked to any user identity.
 
 No advertising, analytics, or tracking SDKs are bundled with the extension.
 
