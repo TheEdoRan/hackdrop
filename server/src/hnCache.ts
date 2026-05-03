@@ -4,7 +4,7 @@ import type { HnCacheEntry } from "./types.ts";
 
 const logger = pino({ name: "hn-cache" });
 
-const TTL_MS = 60 * 1000;
+const TTL_MS = 5 * 60 * 1000;
 
 let entry: HnCacheEntry | null = null;
 let inFlight: Promise<void> | null = null;
