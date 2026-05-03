@@ -3,7 +3,7 @@
 # Build context: repository root (so the workspace lockfile is in scope).
 
 # node:24-alpine — pinned by digest to neutralize tag drift. Bump via Dependabot.
-FROM node:24-alpine@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f AS base
+FROM node:25-alpine@sha256:bdf2cca6fe3dabd014ea60163eca3f0f7015fbd5c7ee1b0e9ccb4ced6eb02ef4 AS base
 RUN npm i -g pnpm@10
 WORKDIR /app
 
@@ -32,7 +32,7 @@ RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
     pnpm install --frozen-lockfile --prod --filter @hackdrop/server...
 
 # --- Runtime ---
-FROM node:24-alpine@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f AS runtime
+FROM node:25-alpine@sha256:bdf2cca6fe3dabd014ea60163eca3f0f7015fbd5c7ee1b0e9ccb4ced6eb02ef4 AS runtime
 WORKDIR /app
 # server.ts defaults HOST to 127.0.0.1 so a stray local run doesn't expose
 # the port; inside the container we want it bound on all interfaces so the
