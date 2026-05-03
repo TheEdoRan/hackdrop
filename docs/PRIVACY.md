@@ -1,6 +1,6 @@
 # Hackdrop Privacy Policy
 
-_Last updated: 2026-05-02_
+_Last updated: 2026-05-03_
 
 Hackdrop is a browser extension that replaces the new-tab page with a feed of GitHub Trending repositories and Hacker News stories. This page describes everything Hackdrop does that touches your data.
 
@@ -15,7 +15,7 @@ Hackdrop is a browser extension that replaces the new-tab page with a feed of Gi
 
 When you open a new tab, Hackdrop makes two kinds of HTTP requests:
 
-1. **GitHub Trending data** — a request to `https://hackdrop-api.theedoran.xyz/v1/github`. This is a small backend service operated by the developer that scrapes the public `github.com/trending` page every 30 minutes and returns the parsed list. The request includes only the standard headers your browser attaches automatically (User-Agent, etc.). No identifiers are added by the extension.
+1. **GitHub Trending data** — a request to `https://hackdrop-api.theedoran.xyz/v1/github`. This is a small backend service operated by the developer that scrapes the public `github.com/trending` page every hour and returns the parsed list. The request includes only the standard headers your browser attaches automatically (User-Agent, etc.). No identifiers are added by the extension.
 2. **Hacker News stories** — requests to `https://hacker-news.firebaseio.com/v0/`, the official public Hacker News API operated by Y Combinator. The same applies: no identifiers added by the extension.
 
 Both endpoints are public and read-only. Hackdrop never sends form data, login credentials, page contents, browsing history, or any other personal information.
