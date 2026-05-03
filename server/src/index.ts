@@ -5,6 +5,7 @@ import { secureHeaders } from "hono/secure-headers";
 import { timeout } from "hono/timeout";
 import { pino } from "pino";
 import { getCached, snapshot } from "./cache.ts";
+import { getHackerNews, snapshotHn } from "./hnCache.ts";
 import { rateLimit } from "./rateLimit.ts";
 import type { Since } from "./types.ts";
 
@@ -60,6 +61,7 @@ export function createApp(): Hono {
 
 	app.get("/health", (c) => {
 		const snap = snapshot();
+		const hn = snapshotHn();
 		c.header("Cache-Control", "no-store");
 		return c.json({
 			ok: true,
@@ -67,6 +69,11 @@ export function createApp(): Hono {
 			lastScrapeStatus: snap.lastScrapeStatus,
 			cacheKeys: snap.cacheKeys,
 			parserVersion: PARSER_VERSION,
+			hackerNews: {
+				lastFetchAt: hn.lastFetchAt ? new Date(hn.lastFetchAt).toISOString() : null,
+				lastFetchStatus: hn.lastFetchStatus,
+				cached: hn.cached,
+			},
 		});
 	});
 
@@ -99,6 +106,21 @@ export function createApp(): Hono {
 		c.header("X-Hackdrop-Parser-Version", String(PARSER_VERSION));
 
 		return c.json(entry.data);
+	});
+
+	v1.get("/hackernews", async (c) => {
+		const hn = await getHackerNews();
+		if (!hn) {
+			c.header("Cache-Control", "no-store");
+			c.header("Retry-After", "10");
+			return c.json({ error: "cache_warming", message: "Server is warming up; try again in a moment." }, 503);
+		}
+
+		c.header("Cache-Control", "public, s-maxage=60, max-age=30, stale-while-revalidate=120");
+		c.header("Vary", "Accept-Encoding");
+		c.header("X-Hackdrop-Updated-At", new Date(hn.updatedAt).toISOString());
+
+		return c.json(hn.data);
 	});
 
 	app.route("/v1", v1);
