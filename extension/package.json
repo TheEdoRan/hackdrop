@@ -15,16 +15,15 @@
 		"preact": "^10.25.1"
 	},
 	"devDependencies": {
-		"@preact/preset-vite": "^2.9.4",
+		"@preact/preset-vite": "^2.10.5",
 		"@preact/signals": "^2.0.0",
-		"@tailwindcss/vite": "^4.0.0",
+		"@tailwindcss/vite": "^4.2.4",
 		"@types/chrome": "^0.0.287",
 		"@types/firefox-webext-browser": "^120.0.4",
-		"@types/node": "^24.0.0",
-		"tailwindcss": "^4.0.0",
-		"tsx": "^4.19.2",
-		"typescript": "^5.7.2",
-		"vite": "^6.0.3",
+		"@types/node": "catalog:",
+		"tailwindcss": "^4.2.4",
+		"typescript": "catalog:",
+		"vite": "^8.0.10",
 		"web-ext": "^8.3.0"
 	}
 }
