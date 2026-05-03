@@ -30,6 +30,9 @@ export function useSourceData<TItem>(source: Source<TItem>): SourceDataState<TIt
 			try {
 				const fresh = await source.fetch(ctrl.signal);
 				if (ctrl.signal.aborted) return;
+				// Skip writing on empty results so a transient upstream blip can't
+				// poison a good stale cache or wipe currently-rendered items.
+				// ColumnCard's empty-state branch handles the cold-start case.
 				if (fresh.length > 0) {
 					setItems(fresh);
 					setError(null);
