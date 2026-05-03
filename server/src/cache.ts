@@ -4,7 +4,7 @@ import type { CacheEntry, ScrapeFn, ScrapeTarget } from "./types.ts";
 
 const logger = pino({ name: "cache" });
 
-const REFRESH_MS = 30 * 60 * 1000;
+const REFRESH_MS = 60 * 60 * 1000;
 const TARGETS: ScrapeTarget[] = [{ since: "daily" }, { since: "weekly" }, { since: "monthly" }];
 
 const store = new Map<string, CacheEntry>();

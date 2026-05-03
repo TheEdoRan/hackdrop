@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Hackdrop is a pnpm workspace with two packages:
 
 - `extension/` — Preact + Vite + Tailwind v4 browser extension (MV3, dual-targets Chromium and Firefox from a single build).
-- `server/` — Hono on Node 24, scrapes `github.com/trending` every 30 minutes and serves the cached JSON.
+- `server/` — Hono on Node 24, scrapes `github.com/trending` every hour and serves the cached JSON.
 
 Node 24+ is required (`.nvmrc`, `engines.node: ">=24"`). pnpm 10.x is the package manager. Deployment recipe lives in `server/DEPLOYMENT.md`; a `docker-compose.yml` at the repo root is the canonical VPS workflow.
 
@@ -71,9 +71,9 @@ To point at a different server (e.g. a local one for testing), change both and r
 
 `server/src/server.ts` boots Hono on `:3000`, registers `SIGINT`/`SIGTERM` shutdown, and starts a scheduler.
 
-- `cache.ts` — module-level `Map` cache keyed by `${since}:${language}`. `startScheduler()` runs the scrape immediately on boot and every 30 minutes. **On scrape failure (network error or `ParserDriftError`) the previous good cache is kept** and `lastScrapeStatus` flips to `"failed"`; the endpoint keeps serving stale data rather than 5xx-ing.
+- `cache.ts` — module-level `Map` cache keyed by `${since}:${language}`. `startScheduler()` runs the scrape immediately on boot and every hour. **On scrape failure (network error or `ParserDriftError`) the previous good cache is kept** and `lastScrapeStatus` flips to `"failed"`; the endpoint keeps serving stale data rather than 5xx-ing.
 - `scrape.ts` — fetches `github.com/trending` with a 10s `AbortController` timeout, parses with cheerio. If fewer than `MIN_VALID_ITEM_COUNT` (5) items come out, it throws `ParserDriftError` so the cache layer knows GitHub's HTML probably changed. **When the scraper breaks, fix the selectors in `scrape.ts` — don't bypass the drift check.**
-- `index.ts` — defines `/health` (no-store, returns scrape status + parser version) and `/v1/github?since=daily|weekly|monthly`. The `/v1/github` response sets `Cache-Control: public, s-maxage=1800, max-age=600, stale-while-revalidate=600` (CDN/edge caches for 30m, browser 10m + 10m SWR). Returns `503 cache_warming` only before the boot scrape lands.
+- `index.ts` — defines `/health` (no-store, returns scrape status + parser version) and `/v1/github?since=daily|weekly|monthly`. The `/v1/github` response sets `Cache-Control: public, s-maxage=3600, max-age=1800, stale-while-revalidate=1800` (CDN/edge caches for 1h, browser 30m + 30m SWR). Returns `503 cache_warming` only before the boot scrape lands.
 - CORS is wide open (`origin: "*"`) since this is consumed by browser extensions from arbitrary origins.
 
 `PARSER_VERSION` in `index.ts` is exposed via the `X-Hackdrop-Parser-Version` header and `/health`. Bump it whenever the scrape output shape changes so clients/observers can detect drift.

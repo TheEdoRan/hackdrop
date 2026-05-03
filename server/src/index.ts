@@ -93,7 +93,7 @@ export function createApp(): Hono {
 			return c.json({ error: "cache_warming", message: "Server is warming up; try again in a moment." }, 503);
 		}
 
-		c.header("Cache-Control", "public, s-maxage=1800, max-age=600, stale-while-revalidate=600");
+		c.header("Cache-Control", "public, s-maxage=3600, max-age=1800, stale-while-revalidate=1800");
 		c.header("Vary", "Accept-Encoding");
 		c.header("X-Hackdrop-Updated-At", new Date(entry.updatedAt).toISOString());
 		c.header("X-Hackdrop-Parser-Version", String(PARSER_VERSION));
