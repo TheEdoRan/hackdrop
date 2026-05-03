@@ -7,6 +7,12 @@ services:
     container_name: hackdrop-server
     restart: unless-stopped
     init: true
+    environment:
+      # Optional. When set, enables GET /internal/status (gated by the
+      # X-Internal-Token request header). Leave the host env / .env entry empty
+      # to keep the endpoint disabled — `${INTERNAL_TOKEN:-}` resolves to "" so
+      # compose never warns about an unset variable.
+      INTERNAL_TOKEN: ${INTERNAL_TOKEN:-}
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/health"]
       interval: 30s

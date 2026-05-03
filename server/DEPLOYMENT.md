@@ -48,6 +48,8 @@ docker run -d \
 
 None are required. The server reads `PORT` (default `3000`) and `NODE_ENV` (set to `production` in the runtime image). Optionally set `LOG_LEVEL` if you want to filter `pino` output.
 
+Optional: set `INTERNAL_TOKEN` to enable `GET /internal/status`, which returns the detailed cache/scrape state (lastScrapeAt, lastScrapeStatus, cacheKeys, parserVersion, Hacker News status). Callers must send `X-Internal-Token: <value>`. With the variable unset, the endpoint isn't registered at all and `/health` returns just `{ "ok": true }`.
+
 ### 1.3. TLS and domain
 
 Put the container behind a reverse proxy (Caddy, Traefik, nginx, or your platform's built-in router) that terminates TLS on a stable hostname. The extension hardcodes `https://hackdrop-api.theedoran.xyz` in `extension/src/sources/github-trending/fetch.ts` and `extension/public/manifest.json`. Change both if you deploy to a different host (and rebuild the extension after).

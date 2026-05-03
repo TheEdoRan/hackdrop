@@ -17,6 +17,10 @@ const RATE_LIMIT_MAX = 120;
 
 const VALID_SINCE: ReadonlySet<Since> = new Set(["daily", "weekly", "monthly"]);
 
+// `/internal/status` is registered only when the token is set, so an
+// unconfigured deployment 404s rather than exposing the endpoint at all.
+const INTERNAL_TOKEN = process.env.INTERNAL_TOKEN ?? null;
+
 const logger = pino({ name: "http" });
 
 export function createApp(): Hono {
@@ -44,13 +48,7 @@ export function createApp(): Hono {
 			origin: "*",
 			allowMethods: ["GET", "OPTIONS"],
 			allowHeaders: ["Content-Type"],
-			exposeHeaders: [
-				"X-Hackdrop-Updated-At",
-				"X-Hackdrop-Parser-Version",
-				"X-RateLimit-Limit",
-				"X-RateLimit-Remaining",
-				"X-RateLimit-Reset",
-			],
+			exposeHeaders: ["X-Hackdrop-Updated-At", "X-RateLimit-Limit", "X-RateLimit-Remaining", "X-RateLimit-Reset"],
 			credentials: false,
 			maxAge: 86_400,
 		})
@@ -60,22 +58,33 @@ export function createApp(): Hono {
 	app.use("*", rateLimit({ windowMs: RATE_LIMIT_WINDOW_MS, max: RATE_LIMIT_MAX }));
 
 	app.get("/health", (c) => {
-		const snap = snapshot();
-		const hn = snapshotHn();
 		c.header("Cache-Control", "no-store");
-		return c.json({
-			ok: true,
-			lastScrapeAt: snap.lastScrapeAt ? new Date(snap.lastScrapeAt).toISOString() : null,
-			lastScrapeStatus: snap.lastScrapeStatus,
-			cacheKeys: snap.cacheKeys,
-			parserVersion: PARSER_VERSION,
-			hackerNews: {
-				lastFetchAt: hn.lastFetchAt ? new Date(hn.lastFetchAt).toISOString() : null,
-				lastFetchStatus: hn.lastFetchStatus,
-				cached: hn.cached,
-			},
-		});
+		return c.json({ ok: true });
 	});
+
+	if (INTERNAL_TOKEN) {
+		app.get("/internal/status", (c) => {
+			if (c.req.header("x-internal-token") !== INTERNAL_TOKEN) {
+				c.header("Cache-Control", "no-store");
+				return c.json({ error: "forbidden" }, 403);
+			}
+			const snap = snapshot();
+			const hn = snapshotHn();
+			c.header("Cache-Control", "no-store");
+			return c.json({
+				ok: true,
+				lastScrapeAt: snap.lastScrapeAt ? new Date(snap.lastScrapeAt).toISOString() : null,
+				lastScrapeStatus: snap.lastScrapeStatus,
+				cacheKeys: snap.cacheKeys,
+				parserVersion: PARSER_VERSION,
+				hackerNews: {
+					lastFetchAt: hn.lastFetchAt ? new Date(hn.lastFetchAt).toISOString() : null,
+					lastFetchStatus: hn.lastFetchStatus,
+					cached: hn.cached,
+				},
+			});
+		});
+	}
 
 	const v1 = new Hono();
 
@@ -103,7 +112,6 @@ export function createApp(): Hono {
 		c.header("Cache-Control", "public, s-maxage=3600, max-age=1800, stale-while-revalidate=1800");
 		c.header("Vary", "Accept-Encoding");
 		c.header("X-Hackdrop-Updated-At", new Date(entry.updatedAt).toISOString());
-		c.header("X-Hackdrop-Parser-Version", String(PARSER_VERSION));
 
 		return c.json(entry.data);
 	});
