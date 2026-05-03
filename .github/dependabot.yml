@@ -1,0 +1,29 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    versioning-strategy: increase
+    groups:
+      types:
+        patterns: ["@types/*"]
+      preact:
+        patterns: ["preact", "@preact/*"]
+      hono:
+        patterns: ["hono", "@hono/*"]
+      tooling:
+        patterns: ["oxlint*", "oxfmt", "typescript", "tsx", "vite", "@tailwindcss/*", "tailwindcss", "web-ext"]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: docker
+    directory: "/server"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5

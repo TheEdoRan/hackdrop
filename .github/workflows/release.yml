@@ -11,8 +11,8 @@ on:
         required: true
         type: string
 
-permissions:
-  contents: write
+# default to no permissions; the build job re-grants what it actually needs.
+permissions: {}
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -21,6 +21,8 @@ jobs:
   build:
     name: build extension zip
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: resolve ref
         id: ref
@@ -41,15 +43,28 @@ jobs:
           echo "ref=$ref" >> "$GITHUB_OUTPUT"
 
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           ref: ${{ steps.ref.outputs.ref }}
+          fetch-depth: 0
+
+      - name: verify tag is on main
+        env:
+          REF: ${{ steps.ref.outputs.ref }}
+        run: |
+          # Refuse to release a tag pointing outside main's history. This stops a
+          # compromised maintainer from pushing v9.9.9 at an arbitrary commit.
+          tag_sha=$(git rev-parse "refs/tags/$REF^{commit}")
+          if ! git merge-base --is-ancestor "$tag_sha" origin/main; then
+            echo "tag $REF (=$tag_sha) is not an ancestor of origin/main" >&2
+            exit 1
+          fi
 
       - name: setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
 
       - name: setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: pnpm
@@ -72,7 +87,7 @@ jobs:
         run: pnpm --filter @hackdrop/extension package
 
       - name: upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: hackdrop-${{ steps.ref.outputs.ref }}
           path: extension/web-ext-artifacts/*.zip
@@ -96,7 +111,7 @@ jobs:
           cat release_notes.md
 
       - name: create github release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           tag_name: ${{ steps.ref.outputs.ref }}
           files: extension/web-ext-artifacts/*.zip
