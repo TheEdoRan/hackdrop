@@ -1,6 +1,6 @@
 {
 	"name": "hackdrop",
-	"version": "0.1.3",
+	"version": "0.2.0",
 	"description": "A modernized new-tab extension showing GitHub Trending and Hacker News, with auto theme.",
 	"private": true,
 	"type": "module",
