@@ -10,9 +10,10 @@ Categories used: **Added** (new features), **Changed** (changes to existing beha
 
 ### Added
 
-### Changed
-
-### Fixed
+- A settings menu in the footer — the three-dot icon next to the X and GitHub links opens a dropdown with two preferences.
+- Contrast preference: choose between **Crisp** (the original sharp neutrals) and **Soft**, which gently lowers contrast in both light and dark themes.
+- Text size preference: choose between **Default** and **Smaller**. The default text is now slightly larger across the columns; switch to Smaller for the previous compact look.
+- Both preferences persist locally and are applied before the page paints, so opening a new tab never flashes the wrong setting.
 
 ## [0.1.3] - 2026-05-04
 

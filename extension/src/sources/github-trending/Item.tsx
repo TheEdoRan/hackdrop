@@ -15,7 +15,7 @@ export function GitHubTrendingItem({ item }: { item: TrendingRepo }) {
 			rel="noopener noreferrer"
 			class="group hover:bg-hover dark:hover:bg-hover-dk relative block px-4 py-3 transition-colors motion-reduce:transition-none"
 		>
-			<div class="num flex items-baseline gap-1 text-[14px]">
+			<div class="num flex items-baseline gap-1 text-[0.875rem]">
 				<span class="text-ink-2 dark:text-ink-2-dk">{item.owner}</span>
 				<span class="text-ink-3 dark:text-ink-3-dk">/</span>
 				<span class="text-ink group-hover:text-accent dark:text-ink-dk dark:group-hover:text-accent-dk">
@@ -24,10 +24,12 @@ export function GitHubTrendingItem({ item }: { item: TrendingRepo }) {
 			</div>
 
 			{item.description && (
-				<p class="text-ink-2 dark:text-ink-2-dk mt-1.5 line-clamp-2 text-[13px] leading-snug">{item.description}</p>
+				<p class="text-ink-2 dark:text-ink-2-dk mt-1.5 line-clamp-2 text-[0.813rem] leading-snug">
+					{item.description}
+				</p>
 			)}
 
-			<div class="num text-ink-3 dark:text-ink-3-dk mt-2.5 flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[11px]">
+			<div class="num text-ink-3 dark:text-ink-3-dk mt-2.5 flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[0.688rem]">
 				{item.language && (
 					<span class="inline-flex items-center gap-1.5">
 						<span

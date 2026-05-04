@@ -18,15 +18,15 @@ export function HackerNewsItem({ item }: { item: HnStory }) {
 			/>
 
 			<div class="pointer-events-none relative flex items-baseline gap-2">
-				<span class="text-ink dark:text-ink-dk text-[14px] leading-snug">{item.title}</span>
+				<span class="text-ink dark:text-ink-dk text-[0.875rem] leading-snug">{item.title}</span>
 				{item.domain && (
-					<span class="num text-ink-3 dark:text-ink-3-dk group-hover:text-brand-hn shrink-0 text-[11px]">
+					<span class="num text-ink-3 dark:text-ink-3-dk group-hover:text-brand-hn shrink-0 text-[0.688rem]">
 						({item.domain})
 					</span>
 				)}
 			</div>
 
-			<div class="num text-ink-3 dark:text-ink-3-dk pointer-events-none mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px]">
+			<div class="num text-ink-3 dark:text-ink-3-dk pointer-events-none mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[0.688rem]">
 				<span class="text-ink-2 dark:text-ink-2-dk inline-flex items-center gap-1">
 					<span class="text-brand-hn/75" aria-hidden="true">
 						▲

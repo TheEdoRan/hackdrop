@@ -11,7 +11,7 @@ export function PeriodFilter({ value, onChange }: { value: Period | null; onChan
 		<div
 			role="tablist"
 			aria-label="Trending period"
-			class="num flex items-center gap-2 text-[12px] font-medium uppercase"
+			class="num flex items-center gap-2 text-[0.75rem] font-medium uppercase"
 		>
 			{PERIODS.map((p) => {
 				const isActive = p === value;

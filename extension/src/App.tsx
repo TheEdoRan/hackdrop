@@ -1,6 +1,19 @@
-import { useState } from "preact/hooks";
+import type { ComponentChildren } from "preact";
+import { useEffect, useRef, useState } from "preact/hooks";
+import { CrispIcon, SoftIcon } from "./components/ContrastIcon";
+import { KebabIcon } from "./components/KebabIcon";
 import { SourceColumn } from "./components/SourceColumn";
+import { TextSizeLargeIcon, TextSizeSmallIcon } from "./components/TextSizeIcon";
 import { XIcon } from "./components/XIcon";
+import {
+	CONTRAST_MODES,
+	type ContrastMode,
+	PREF_KEYS,
+	readPref,
+	TEXT_SIZES,
+	type TextSize,
+	writePref,
+} from "./lib/prefs";
 import { githubTrending } from "./sources/github-trending";
 import { GithubTrendingColumn } from "./sources/github-trending/Column";
 import { GitHubIcon } from "./sources/github-trending/Icon";
@@ -53,7 +66,7 @@ function SourceToggle({ activeId, onChange }: { activeId: SourceId; onChange: (i
 						}`}
 					>
 						<source.Icon className={`size-4 shrink-0 ${accentClass}`} />
-						<span class="text-ink dark:text-ink-dk hidden text-[13px] font-medium tracking-[0.16em] uppercase sm:inline">
+						<span class="text-ink dark:text-ink-dk hidden text-[0.813rem] font-medium tracking-[0.16em] uppercase sm:inline">
 							{source.name}
 						</span>
 					</button>
@@ -87,7 +100,114 @@ function Footer() {
 				>
 					<GitHubIcon className="size-5" />
 				</a>
+				<SettingsMenu />
 			</div>
 		</footer>
+	);
+}
+
+function SettingsMenu() {
+	const [open, setOpen] = useState(false);
+	const [contrast, setContrastState] = useState<ContrastMode>(() =>
+		readPref(PREF_KEYS.contrast, "crisp", CONTRAST_MODES)
+	);
+	const [textSize, setTextSizeState] = useState<TextSize>(() => readPref(PREF_KEYS.textSize, "default", TEXT_SIZES));
+	const ref = useRef<HTMLDivElement>(null);
+
+	const setContrast = (mode: ContrastMode) => {
+		setContrastState(mode);
+		writePref(PREF_KEYS.contrast, mode);
+		document.documentElement.classList.toggle("contrast-soft", mode === "soft");
+	};
+
+	const setTextSize = (size: TextSize) => {
+		setTextSizeState(size);
+		writePref(PREF_KEYS.textSize, size);
+		document.documentElement.classList.toggle("text-smaller", size === "smaller");
+	};
+
+	useEffect(() => {
+		if (!open) return;
+		const onPointerDown = (e: MouseEvent) => {
+			if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+		};
+		const onKey = (e: KeyboardEvent) => {
+			if (e.key === "Escape") setOpen(false);
+		};
+		document.addEventListener("mousedown", onPointerDown);
+		document.addEventListener("keydown", onKey);
+		return () => {
+			document.removeEventListener("mousedown", onPointerDown);
+			document.removeEventListener("keydown", onKey);
+		};
+	}, [open]);
+
+	return (
+		<div ref={ref} class="relative inline-flex">
+			<button
+				type="button"
+				aria-haspopup="menu"
+				aria-expanded={open}
+				aria-label="Open settings"
+				title="Settings"
+				onClick={() => setOpen((v) => !v)}
+				class="text-ink-3 hover:text-ink dark:text-ink-3-dk dark:hover:text-ink-dk aria-expanded:text-ink dark:aria-expanded:text-ink-dk transition active:scale-90 motion-reduce:transition-none motion-reduce:active:scale-100"
+			>
+				<KebabIcon className="size-5" />
+			</button>
+
+			{open && (
+				<div
+					role="menu"
+					class="border-rule dark:border-rule-dk bg-paper dark:bg-paper-dk menu-pop absolute right-0 bottom-full mb-2 w-56 rounded border p-1 shadow-lg"
+				>
+					<SettingsRow
+						label="Text size"
+						value={textSize === "smaller" ? "Smaller" : "Default"}
+						onClick={() => setTextSize(textSize === "smaller" ? "default" : "smaller")}
+					>
+						{textSize === "smaller" ? (
+							<TextSizeSmallIcon className="size-5" />
+						) : (
+							<TextSizeLargeIcon className="size-5" />
+						)}
+					</SettingsRow>
+					<SettingsRow
+						label="Contrast"
+						value={contrast === "soft" ? "Soft" : "Crisp"}
+						onClick={() => setContrast(contrast === "soft" ? "crisp" : "soft")}
+					>
+						{contrast === "soft" ? <SoftIcon className="size-[18px]" /> : <CrispIcon className="size-[18px]" />}
+					</SettingsRow>
+				</div>
+			)}
+		</div>
+	);
+}
+
+function SettingsRow({
+	label,
+	value,
+	onClick,
+	children,
+}: {
+	label: string;
+	value: string;
+	onClick: () => void;
+	children: ComponentChildren;
+}) {
+	return (
+		<button
+			type="button"
+			role="menuitem"
+			onClick={onClick}
+			class="text-ink-2 hover:bg-hover hover:text-ink dark:text-ink-2-dk dark:hover:bg-hover-dk dark:hover:text-ink-dk flex w-full items-center justify-between gap-3 rounded px-3 py-2 text-[13px] transition-colors motion-reduce:transition-none"
+		>
+			<span>{label}</span>
+			<span class="text-ink-3 dark:text-ink-3-dk flex items-center gap-2">
+				<span class="num text-[11px] uppercase">{value}</span>
+				{children}
+			</span>
+		</button>
 	);
 }

@@ -67,7 +67,9 @@ function ColumnHeader({ source, headerSlot }: { source: SourceMeta; headerSlot?:
 			<div class="flex items-center gap-2.5 px-4 py-2.5">
 				<source.Icon className={`size-4 shrink-0 ${accentClass}`} />
 
-				<h2 class="num text-ink dark:text-ink-dk text-[13px] font-medium tracking-[0.16em] uppercase">{source.name}</h2>
+				<h2 class="num text-ink dark:text-ink-dk text-[0.813rem] font-medium tracking-[0.16em] uppercase">
+					{source.name}
+				</h2>
 
 				{headerSlot && <div class="ml-4">{headerSlot}</div>}
 

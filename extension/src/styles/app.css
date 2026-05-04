@@ -58,6 +58,83 @@ body {
 	}
 }
 
+/* Soft contrast: subtle reduction in token contrast for both schemes.
+   Applied via the `.contrast-soft` class on <html> (set by the inline
+   script in index.html before paint, then kept in sync by the footer
+   toggle). Tailwind utilities resolve the same --color-* vars, so the
+   override cascades automatically. */
+html.contrast-soft {
+	--color-paper: #fafaf9;
+	--color-ink: #262626;
+	--color-ink-2: #5e5e5e;
+	--color-ink-3: #888888;
+	--color-rule: #ececec;
+	--color-hover: #f1f1f0;
+}
+@media (prefers-color-scheme: dark) {
+	html.contrast-soft {
+		--color-paper-dk: #141414;
+		--color-ink-dk: #d8d8d8;
+		--color-ink-2-dk: #909090;
+		--color-ink-3-dk: #6e6e6e;
+		--color-rule-dk: #262626;
+		--color-hover-dk: #1c1c1c;
+	}
+}
+
+/* Default root font-size = 18px. Tailwind v4's rem-based sizes scale
+   against this value. The .text-smaller class drops back to 16px when
+   the user opts into the more compact layout. */
+html {
+	font-size: 18px;
+}
+html.text-smaller {
+	font-size: 16px;
+}
+
+/* Icon swap: brief fade + scale-in when a toggle icon mounts. Each
+   stateful icon component in the footer toggles renders a different
+   component type, so Preact tears down the old and mounts the new,
+   triggering this animation cleanly. */
+@keyframes icon-swap {
+	from {
+		opacity: 0;
+		transform: scale(0.7);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+.icon-swap {
+	transform-origin: center;
+	animation: icon-swap 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Settings menu pop-in: anchored to the bottom-left so the menu appears
+   to grow upward out of the kebab button it's attached to. */
+@keyframes menu-pop {
+	from {
+		opacity: 0;
+		transform: translateY(4px) scale(0.96);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+.menu-pop {
+	transform-origin: bottom right;
+	animation: menu-pop 140ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.icon-swap,
+	.menu-pop {
+		animation: none;
+	}
+}
+
 /* Tabular monospace for any numeric / metadata bit */
 .num {
 	font-family: var(--font-mono);
