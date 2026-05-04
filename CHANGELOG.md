@@ -8,6 +8,14 @@ Categories used: **Added** (new features), **Changed** (changes to existing beha
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+### Fixed
+
+## [0.1.2] - 2026-05-04
+
 ### Changed
 
 - Raised the minimum Firefox version to 140. Earlier versions (including ESR 115 and 128) can no longer install Hackdrop. The bump is required so the manifest can declare the no-data-collection permission that Mozilla now expects.

@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "Hackdrop",
 	"short_name": "Hackdrop",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Your daily drop of GitHub Trending and Hacker News, in every new tab.",
 	"chrome_url_overrides": {
 		"newtab": "index.html"
