@@ -8,11 +8,9 @@ Categories used: **Added** (new features), **Changed** (changes to existing beha
 
 ## [Unreleased]
 
-### Added
-
-### Changed
-
 ### Fixed
+
+- Fixed text size and contrast preferences not being applied on new tabs. The settings menu showed the correct values, but the page rendered with the defaults until you re-clicked an option. Saved preferences now apply on every new tab without needing to re-toggle them.
 
 ## [0.2.0] - 2026-05-04
 
