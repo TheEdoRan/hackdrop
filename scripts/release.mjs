@@ -159,6 +159,6 @@ if (dryRun) {
 
 git("add", ...toCommit);
 git("commit", "-m", `chore(release): ${tag}`);
-git("tag", tag);
+git("tag", "-a", tag, "-m", tag);
 
 console.log(`\ndone. next: git push --follow-tags`);
