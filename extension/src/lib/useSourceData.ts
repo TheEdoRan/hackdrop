@@ -2,15 +2,17 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import type { Source } from "../sources/types";
 import { readCache, writeCache } from "./cache";
 
+export type SourceDataPhase = "checking-cache" | "fetching-fresh" | "ready";
+
 export type SourceDataState<TItem> = {
 	items: TItem[] | null;
-	isInitialLoad: boolean;
+	phase: SourceDataPhase;
 	error: string | null;
 };
 
 export function useSourceData<TItem>(source: Source<TItem>): SourceDataState<TItem> {
 	const [items, setItems] = useState<TItem[] | null>(null);
-	const [isInitialLoad, setIsInitialLoad] = useState(true);
+	const [phase, setPhase] = useState<SourceDataPhase>("checking-cache");
 	const [error, setError] = useState<string | null>(null);
 
 	const abortRef = useRef<AbortController | null>(null);
@@ -21,10 +23,13 @@ export function useSourceData<TItem>(source: Source<TItem>): SourceDataState<TIt
 
 		const run = async () => {
 			const cached = await readCache(source.cache.key, source.cache.ttlMs);
+			if (ctrl.signal.aborted) return;
 			if (cached) {
 				setItems(cached.data as TItem[]);
-				setIsInitialLoad(false);
+				setPhase("ready");
 				if (cached.isFresh) return;
+			} else {
+				setPhase("fetching-fresh");
 			}
 
 			try {
@@ -45,7 +50,7 @@ export function useSourceData<TItem>(source: Source<TItem>): SourceDataState<TIt
 				setError("Try again later.");
 			} finally {
 				if (!ctrl.signal.aborted) {
-					setIsInitialLoad(false);
+					setPhase("ready");
 				}
 			}
 		};
@@ -57,7 +62,7 @@ export function useSourceData<TItem>(source: Source<TItem>): SourceDataState<TIt
 
 	return {
 		items,
-		isInitialLoad,
+		phase,
 		error,
 	};
 }

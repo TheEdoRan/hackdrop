@@ -5,13 +5,13 @@ import { PeriodFilter } from "./PeriodFilter";
 import { useTrending } from "./useTrending";
 
 export function GithubTrendingColumn({ className }: { className?: string }) {
-	const { items, isInitialLoad, error, period, setPeriod } = useTrending();
+	const { items, phase, error, period, setPeriod } = useTrending();
 
 	return (
 		<ColumnCard
 			source={githubTrending}
 			items={items}
-			isInitialLoad={isInitialLoad}
+			phase={phase}
 			error={error}
 			Item={GitHubTrendingItem}
 			className={className}

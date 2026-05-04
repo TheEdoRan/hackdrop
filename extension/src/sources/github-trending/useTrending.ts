@@ -1,5 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import { readCache, writeCache } from "../../lib/cache";
+import type { SourceDataPhase } from "../../lib/useSourceData";
 import { fetchTrending } from "./fetch";
 import { type Period, readPeriod, readPeriodSync, writePeriod } from "./period";
 import type { TrendingRepo } from "./types";
@@ -12,7 +13,7 @@ function cacheKey(period: Period): string {
 
 export type TrendingState = {
 	items: TrendingRepo[] | null;
-	isInitialLoad: boolean;
+	phase: SourceDataPhase;
 	error: string | null;
 	// `null` while the persisted period is being loaded async (chrome.storage backend).
 	// The filter UI renders with no tab selected during this brief window so we never
@@ -24,7 +25,7 @@ export type TrendingState = {
 export function useTrending(): TrendingState {
 	const [period, setPeriodState] = useState<Period | null>(() => readPeriodSync());
 	const [items, setItems] = useState<TrendingRepo[] | null>(null);
-	const [isInitialLoad, setIsInitialLoad] = useState(true);
+	const [phase, setPhase] = useState<SourceDataPhase>("checking-cache");
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -48,11 +49,11 @@ export function useTrending(): TrendingState {
 			if (ctrl.signal.aborted) return;
 			if (cached) {
 				setItems(cached.data as TrendingRepo[]);
-				setIsInitialLoad(false);
+				setPhase("ready");
 				if (cached.isFresh) return;
 			} else {
 				setItems(null);
-				setIsInitialLoad(true);
+				setPhase("fetching-fresh");
 			}
 
 			try {
@@ -68,7 +69,7 @@ export function useTrending(): TrendingState {
 				setError("Try again later.");
 			} finally {
 				if (!ctrl.signal.aborted) {
-					setIsInitialLoad(false);
+					setPhase("ready");
 				}
 			}
 		};
@@ -86,7 +87,7 @@ export function useTrending(): TrendingState {
 
 	return {
 		items,
-		isInitialLoad,
+		phase,
 		error,
 		period,
 		setPeriod,

@@ -1,4 +1,5 @@
 import type { ComponentChildren, ComponentType } from "preact";
+import type { SourceDataPhase } from "../lib/useSourceData";
 import type { SourceMeta } from "../sources/types";
 import { ErrorState } from "./ErrorState";
 import { ExternalLinkIcon } from "./ExternalLinkIcon";
@@ -7,7 +8,7 @@ import { ItemSkeletonList } from "./ItemSkeleton";
 export type ColumnCardProps<TItem> = {
 	source: SourceMeta;
 	items: TItem[] | null;
-	isInitialLoad: boolean;
+	phase: SourceDataPhase;
 	error: string | null;
 	Item: ComponentType<{ item: TItem }>;
 	className?: string;
@@ -17,7 +18,7 @@ export type ColumnCardProps<TItem> = {
 export function ColumnCard<TItem>({
 	source,
 	items,
-	isInitialLoad,
+	phase,
 	error,
 	Item,
 	className = "flex",
@@ -36,9 +37,9 @@ export function ColumnCard<TItem>({
 			<div class="scroll-area min-h-0 flex-1 overflow-y-auto">
 				{error && (!items || items.length === 0) && <ErrorState message={error} />}
 
-				{!error && isInitialLoad && <ItemSkeletonList />}
+				{!error && phase === "fetching-fresh" && <ItemSkeletonList />}
 
-				{!error && !isInitialLoad && (items === null || items.length === 0) && (
+				{!error && phase === "ready" && (items === null || items.length === 0) && (
 					<div class="text-ink-3 dark:text-ink-3-dk px-4 py-6 text-sm">
 						Nothing to show right now. Try again in a moment.
 					</div>
