@@ -14,6 +14,10 @@ Categories used: **Added** (new features), **Changed** (changes to existing beha
 
 ### Fixed
 
+## [0.1.3] - 2026-05-04
+
+### Fixed
+
 - Fixed a brief skeleton flash on every new tab when cached items were already available. Cached data now populates cleanly without flicker, and the loading skeleton only appears when there is no cached data and a fresh request is in flight.
 
 ## [0.1.2] - 2026-05-04
