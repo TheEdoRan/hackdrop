@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="./assets/hackdrop.png" alt="Hackdrop" width="160" height="160" />
+	<img src="./assets/hackdrop_rounded.png" alt="Hackdrop" width="160" height="160" />
 </p>
 
 <h1 align="center">Hackdrop</h1>
@@ -14,12 +14,21 @@
 
 ## Install
 
-- **Chrome / Edge / Brave / Arc:** [Chrome Web Store](https://chromewebstore.google.com/) (*coming soon*)
-- **Firefox:** [Firefox Add-ons](https://addons.mozilla.org/) (*coming soon*)
+<p align="center">
+	<a href="https://chromewebstore.google.com/detail/hackdrop/gelebdmofopcodhkeabmdebmgmehgokl">
+		<img src="https://developer.chrome.com/static/docs/webstore/branding/image/iNEddTyWiMfLSwFD6qGq.png" alt="Available in the Chrome Web Store" height="60">
+	</a>
+	&nbsp;
+	<a href="https://addons.mozilla.org/firefox/addon/hackdrop/">
+		<img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="Get the Add-on for Firefox" height="60">
+	</a>
+</p>
 
-Want to try it first? The same new-tab page is live at **[hackdrop.theedoran.xyz](https://hackdrop.theedoran.xyz)**, no install required.
+Works in **Chrome, Edge, Brave, Arc, and any other Chromium browser** via the Chrome Web Store, and in **Firefox** via Mozilla Add-ons.
 
-Until the listings are live, you can also [build from source](#build-from-source) and sideload.
+Prefer not to install? The same page is live at **[hackdrop.theedoran.xyz](https://hackdrop.theedoran.xyz)** — open it as your homepage, or just bookmark it.
+
+Hacking on it? [Build from source](#build-from-source) and sideload.
 
 ## What you get
 
