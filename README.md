@@ -15,13 +15,8 @@
 ## Install
 
 <p align="center">
-	<a href="https://chromewebstore.google.com/detail/hackdrop/gelebdmofopcodhkeabmdebmgmehgokl">
-		<img src="https://developer.chrome.com/static/docs/webstore/branding/image/iNEddTyWiMfLSwFD6qGq.png" alt="Available in the Chrome Web Store" height="60">
-	</a>
-	<span>&nbsp;&nbsp;</span>
-	<a href="https://addons.mozilla.org/firefox/addon/hackdrop/">
-		<img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="Get the Add-on for Firefox" height="60">
-	</a>
+	<a href="https://chromewebstore.google.com/detail/hackdrop/gelebdmofopcodhkeabmdebmgmehgokl"><img src="https://developer.chrome.com/static/docs/webstore/branding/image/iNEddTyWiMfLSwFD6qGq.png" alt="Available in the Chrome Web Store" height="60"></a>
+	<a href="https://addons.mozilla.org/firefox/addon/hackdrop/"><img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="Get the Add-on for Firefox" height="60"></a>
 </p>
 
 Works in **Chrome, Edge, Brave, Arc, and any other Chromium browser** via the Chrome Web Store, and in **Firefox** via Mozilla Add-ons.
