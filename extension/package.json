@@ -12,7 +12,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"preact": "^10.25.1"
+		"preact": "^10.29.2"
 	},
 	"devDependencies": {
 		"@preact/preset-vite": "^2.10.5",
