@@ -3,5 +3,5 @@ packages:
   - server
 
 catalog:
-  "@types/node": ^24.0.0
-  typescript: ^6.0.3
+  "@types/node": ^24.19.2
+  typescript: ^7.0.2
