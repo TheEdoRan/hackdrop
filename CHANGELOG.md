@@ -12,6 +12,8 @@ Categories used: **Added** (new features), **Changed** (changes to existing beha
 
 ### Changed
 
+- Updated the extension to Preact 11 and refreshed its build tooling to the latest versions. There are no visible changes.
+
 ### Fixed
 
 ## [0.2.1] - 2026-05-04
