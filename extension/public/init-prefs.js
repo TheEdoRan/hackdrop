@@ -10,7 +10,7 @@
 		var html = document.documentElement;
 		if (c === "soft") html.classList.add("contrast-soft");
 		if (s === "smaller") html.classList.add("text-smaller");
-	} catch (_) {
+	} catch {
 		/* ignore */
 	}
 })();
