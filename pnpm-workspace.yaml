@@ -5,3 +5,18 @@ packages:
 catalog:
   "@types/node": ^24.19.2
   typescript: ^7.0.2
+
+# Refuse arbitrary dependency lifecycle scripts (postinstall, etc.).
+# `allowBuilds` names the specific packages that genuinely need their build script.
+ignoreScripts: true
+allowBuilds:
+  esbuild: true
+  "@tailwindcss/oxide": true
+
+# Make engines: { node: ">=24" } enforced rather than advisory.
+engineStrict: true
+
+overrides:
+  "ajv@<6.14.0": ^6.14.0
+  "ajv@>=7 <8.18.0": ^8.18.0
+  "uuid@<14.0.0": ^14.0.0

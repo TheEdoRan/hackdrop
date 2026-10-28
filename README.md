@@ -49,7 +49,7 @@ See [`CHANGELOG.md`](./CHANGELOG.md) for what's new in each release.
 <details>
 <summary><strong>Build, run, and load the unpacked extension</strong></summary>
 
-Requires Node 24+ and pnpm 10.x.
+Requires Node 24+ and pnpm 12.x.
 
 ```bash
 pnpm install

@@ -6,7 +6,7 @@ For deploying the Hono API the extension talks to, see [`server/DEPLOYMENT.md`](
 
 ## Prerequisites
 
-- Node 24+ and pnpm 10.x (see repo `.nvmrc`).
+- Node 24+ and pnpm 12.x (see repo `.nvmrc`).
 - A working clone of the repo with deps installed: `pnpm install` from the repo root.
 - The API URL the extension calls is hardcoded in two places:
   - `extension/src/sources/github-trending/fetch.ts`

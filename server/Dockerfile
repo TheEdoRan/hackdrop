@@ -5,18 +5,23 @@
 # node:24-alpine — pinned by digest to neutralize tag drift.
 # Refresh manually: `docker pull node:24-alpine && docker inspect --format='{{index .RepoDigests 0}}' node:24-alpine`
 FROM node:24-alpine@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f AS base
-RUN npm i -g pnpm@10
+# Keep in sync with `packageManager` in the root package.json; a mismatch makes
+# pnpm download the pinned version on every install.
+RUN npm i -g pnpm@12.15.0
 WORKDIR /app
 
 # --- All workspace deps for build ---
 FROM base AS deps
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY server/package.json ./server/
 # extension/package.json is required for pnpm to recognize the workspace shape
 # (the source isn't copied — `--filter @hackdrop/server...` only installs server deps).
 COPY extension/package.json ./extension/
+# The store lives on a cache mount (a different filesystem than /app). pnpm 12
+# falls back to a store inside node_modules when it can't hard-link to the
+# default one, so point --store-dir at the cache mount explicitly.
 RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
-    pnpm install --frozen-lockfile --filter @hackdrop/server...
+    pnpm install --frozen-lockfile --store-dir /root/.local/share/pnpm/store --filter @hackdrop/server...
 
 # --- Compile TypeScript ---
 FROM base AS build
@@ -26,11 +31,11 @@ RUN pnpm --filter @hackdrop/server build
 
 # --- Prod-only deps for runtime ---
 FROM base AS prod-deps
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY server/package.json ./server/
 COPY extension/package.json ./extension/
 RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
-    pnpm install --frozen-lockfile --prod --filter @hackdrop/server...
+    pnpm install --frozen-lockfile --prod --store-dir /root/.local/share/pnpm/store --filter @hackdrop/server...
 
 # --- Runtime ---
 FROM node:24-alpine@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f AS runtime

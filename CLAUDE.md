@@ -9,7 +9,7 @@ Hackdrop is a pnpm workspace with two packages:
 - `extension/` — Preact + Vite + Tailwind v4 browser extension (MV3, dual-targets Chromium and Firefox from a single build).
 - `server/` — Hono on Node 24, scrapes `github.com/trending` every hour and serves the cached JSON.
 
-Node 24+ is required (`.nvmrc`, `engines.node: ">=24"`). pnpm 10.x is the package manager. Deployment recipe lives in `server/DEPLOYMENT.md`; a `docker-compose.yml` at the repo root is the canonical VPS workflow.
+Node 24+ is required (`.nvmrc`, `engines.node: ">=24"`). pnpm 12.x is the package manager. Deployment recipe lives in `server/DEPLOYMENT.md`; a `docker-compose.yml` at the repo root is the canonical VPS workflow.
 
 ## Common commands
 
