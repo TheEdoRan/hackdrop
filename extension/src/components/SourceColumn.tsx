@@ -6,13 +6,6 @@ export function SourceColumn<TItem>({ source, className }: { source: Source<TIte
 	const { items, phase, error } = useSourceData(source);
 
 	return (
-		<ColumnCard
-			source={source}
-			items={items}
-			phase={phase}
-			error={error}
-			Item={source.Item}
-			className={className}
-		/>
+		<ColumnCard source={source} items={items} phase={phase} error={error} Item={source.Item} className={className} />
 	);
 }

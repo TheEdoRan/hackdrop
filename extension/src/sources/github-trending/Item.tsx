@@ -24,9 +24,7 @@ export function GitHubTrendingItem({ item }: { item: TrendingRepo }) {
 			</div>
 
 			{item.description && (
-				<p class="text-ink-2 dark:text-ink-2-dk mt-1.5 line-clamp-2 text-[0.813rem] leading-snug">
-					{item.description}
-				</p>
+				<p class="text-ink-2 dark:text-ink-2-dk mt-1.5 line-clamp-2 text-[0.813rem] leading-snug">{item.description}</p>
 			)}
 
 			<div class="num text-ink-3 dark:text-ink-3-dk mt-2.5 flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[0.688rem]">
